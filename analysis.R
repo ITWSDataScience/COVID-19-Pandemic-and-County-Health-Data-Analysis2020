@@ -12,19 +12,19 @@ mort.rate <- covid.data %>%
 
 scatter.data <- dplyr::inner_join(
                   mort.rate,
-                  factors[c("county_fips", "popu_beds")],
+                  factors[c("county_fips", "pct_less_18")],
                   by = "county_fips")
 
 plot.scatter <- ggplot(scatter.data) +
                 geom_point(
                   aes_string(
                     x = "death_rate",
-                    y = "popu_beds" )) +
+                    y = "pct_less_18" )) +
                 xlab("Mortality Rate") +
-                ylab("Beds per 1000 Populations")
+                ylab("Younger Than 18")
 
-# plot.scatter
-# ggsave("result/ma_beds_deathrate.png")
+#plot.scatter
+#ggsave("result/ma_18_deathrate.png")
 
 # generate raw kendall correlation from mort.rate and factors
 mort.kendall.cor <- mort.rate %>% 
