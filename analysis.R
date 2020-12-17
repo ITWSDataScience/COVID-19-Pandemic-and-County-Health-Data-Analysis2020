@@ -1,16 +1,27 @@
 source("Source.R")
 
-state_choice = "MA"
-
-state.list <- state.abb
-names(state.list) <- state.name
-
 # extract death rate data for selected state
 mort.rate <- covid.data %>% 
   dplyr::filter( 
-    state_abbr == state_choice,
+    state_abbr == "MA",
     period == tail(date_of_all, n=1) ) %>%
   dplyr::select(county_fips, death_rate)
+
+scatter.data <- dplyr::inner_join(
+                  mort.rate,
+                  factors[c("county_fips", "popu_beds")],
+                  by = "county_fips")
+
+plot.scatter <- ggplot(scatter.data) +
+                geom_point(
+                  aes_string(
+                    x = "death_rate",
+                    y = "popu_beds" )) +
+                xlab("Mortality Rate") +
+                ylab("Beds per 10k Population")
+
+# plot.scatter
+# ggsave("ma_beds_deathrate.png")
 
 # generate raw kendall correlation from mort.rate and factors
 mort.kendall.cor <- mort.rate %>% 
@@ -24,12 +35,16 @@ mort.kendall.cor <- mort.rate %>%
     chr_code = namemap[chr_code, 1]) %>% 
   na.omit()
 
+write.csv(mort.kendall.cor, "kendall_result.csv")
+
 # sort kendall cor
 mort.kendall.cor.new <- mort.kendall.cor %>% 
   dplyr::filter(kendall_p < 0.1) %>% 
   dplyr::arrange(desc(kendall_cor)) %>% 
   dplyr::top_n(15, abs(kendall_cor)) %>% 
   dplyr::mutate(chr_code = reorder(chr_code, kendall_cor))
+
+write.csv(mort.kendall.cor.new, "kendall_top15.csv")
 
 mort.kendall.cor.new %>% 
   ggplot(
@@ -83,4 +98,4 @@ mort.kendall.cor.new %>%
         plot.title = element_text(hjust = 0.5, size = 15),
         legend.position="top")
 
-ggsave(paste(state_choice, "_kendall.png", sep=""), width = 8, height = 10)
+ggsave(paste("MA", "_kendall.png", sep=""), width = 8, height = 10)
