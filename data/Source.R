@@ -122,7 +122,7 @@ county_hospitals_aggregated = hospitals %>%
 county_hospitals_aggregated$county_fips = str_pad(county_hospitals_aggregated$COUNTYFIPS, 5, pad = "0")
 county_hospitals_aggregated <- merge(county_hospitals_aggregated,popu,by.x = "county_fips", by.y = "FIPS", all = T)
 county_hospitals_aggregated <- county_hospitals_aggregated %>% drop_na(Population, beds)
-county_hospitals_aggregated$popu_beds = county_hospitals_aggregated$beds/county_hospitals_aggregated$Population*100000
+county_hospitals_aggregated$popu_beds = county_hospitals_aggregated$beds/county_hospitals_aggregated$Population*1000
 county_hospitals_aggregated <- subset(county_hospitals_aggregated, select = c(county_fips, popu_beds))
 
 factors = merge(county_hospitals_aggregated, chr.data.2019, by = "county_fips", all = T)

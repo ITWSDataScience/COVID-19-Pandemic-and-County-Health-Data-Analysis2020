@@ -21,7 +21,7 @@ plot.scatter <- ggplot(scatter.data) +
                     x = "death_rate",
                     y = "popu_beds" )) +
                 xlab("Mortality Rate") +
-                ylab("Beds per 10k Population")
+                ylab("Beds per 1000 Populations")
 
 # plot.scatter
 # ggsave("result/ma_beds_deathrate.png")
