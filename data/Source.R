@@ -11,13 +11,13 @@ for (lib in libs){
 }
 
 # Read in new Social Determinants definitions
-SocialDeterminants <- read_csv("SocialDeterminants.csv")
+SocialDeterminants <- read_csv("data/SocialDeterminants.csv")
 
 final.determinants <- SocialDeterminants[SocialDeterminants$Keep == 1,]["Code"]
 final.determinants <- append(final.determinants$Code, "county_fips", after = 0)
 
 # Load all data
-chr.data.2019 <- readRDS("chr.data.2019.rds")
+chr.data.2019 <- readRDS("data/chr.data.2019.rds")
 chr.data.2019 <- chr.data.2019 %>%
   as_data_frame %>%
   select(final.determinants)
@@ -25,7 +25,7 @@ chr.data.2019 <- chr.data.2019 %>%
 # Load name map
 chr.namemap.2019 <- SocialDeterminants %>% select("Code", "Name")
 
-geo.namemap <- readRDS("geo.namemap.rds")
+geo.namemap <- readRDS("data/geo.namemap.rds")
 geo <- subset(geo.namemap, select = -c(state_fips))
 geo$county_fips <- str_pad(geo$county_fips, 5, pad = "0")
 
@@ -80,7 +80,7 @@ kendall.func <- function(x.data, sd.data) {
 date_of_study = "2020-11-15"
 
 # use population data from 2020CHR for calculation of the COVID-19 death rate
-chr <- read_csv("2020CHR.csv")
+chr <- read_csv("data/2020CHR.csv")
 popu <- subset(chr, select = c(FIPS, Population))
 
 # Historical data

@@ -1,4 +1,7 @@
-source("Source.R")
+knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_knit$set(root.dir = "../")
+
+source("data/Source.R")
 
 # extract death rate data for selected state
 mort.rate <- covid.data %>% 
@@ -21,7 +24,7 @@ plot.scatter <- ggplot(scatter.data) +
                 ylab("Beds per 10k Population")
 
 # plot.scatter
-# ggsave("ma_beds_deathrate.png")
+# ggsave("result/ma_beds_deathrate.png")
 
 # generate raw kendall correlation from mort.rate and factors
 mort.kendall.cor <- mort.rate %>% 
@@ -35,7 +38,7 @@ mort.kendall.cor <- mort.rate %>%
     chr_code = namemap[chr_code, 1]) %>% 
   na.omit()
 
-write.csv(mort.kendall.cor, "kendall_result.csv")
+write.csv(mort.kendall.cor, "result/kendall_result.csv")
 
 # sort kendall cor
 mort.kendall.cor.new <- mort.kendall.cor %>% 
@@ -44,7 +47,7 @@ mort.kendall.cor.new <- mort.kendall.cor %>%
   dplyr::top_n(15, abs(kendall_cor)) %>% 
   dplyr::mutate(chr_code = reorder(chr_code, kendall_cor))
 
-write.csv(mort.kendall.cor.new, "kendall_top15.csv")
+write.csv(mort.kendall.cor.new, "result/kendall_top15.csv")
 
 mort.kendall.cor.new %>% 
   ggplot(
@@ -98,4 +101,4 @@ mort.kendall.cor.new %>%
         plot.title = element_text(hjust = 0.5, size = 15),
         legend.position="top")
 
-ggsave(paste("MA", "_kendall.png", sep=""), width = 8, height = 10)
+ggsave("result/MA_kendall.png", width = 8, height = 10)
